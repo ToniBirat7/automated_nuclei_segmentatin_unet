@@ -18,6 +18,69 @@
   - **Deep Learning Approach:** Utilizing the U-Net architecture for segmenting nuclei from microscopy images.
   - **Traditional Approach:** Leveraging a pre-trained VGG16 network for feature extraction coupled with a Random Forest Classifier for predicting the presence of nuclei.
 
+  ## Paper Overview (InJET Special Issue, KEC Conference 2025)
+
+  **Publication Venue:** Special Issue of InJET, KEC Conference 2025 (published via InJET/NEPJOL).
+
+  **Problem Addressed:** The paper targets automated nuclei segmentation in microscopy images, focusing on robust delineation of nuclear boundaries across diverse image conditions, varying cell morphologies, and overlapping nuclei. It aims to replace subjective manual annotation with a consistent, quantitative segmentation pipeline suitable for biomedical research and clinical diagnostics, especially in resource-constrained settings.
+
+  ### What Was Used
+  - **Dataset:** 2018 Data Science Bowl nuclei dataset (microscopy images with multiple instance masks per image).
+  - **Preprocessing & Data Cleaning:**
+    - Consolidation of multiple nucleus masks into a single binary mask using pixel-wise max.
+    - Gaussian filtering with sigma = 1.5 to suppress noise while preserving edges.
+    - Resizing images to 256×256 and normalization.
+  - **Data Augmentation:** Random rotations (0–360°), horizontal/vertical flips, and controlled brightness/contrast adjustments.
+  - **Optimization & Training:**
+    - Adam optimizer with initial learning rate 0.001.
+    - Composite loss combining Binary Cross-Entropy and Dice coefficient to address class imbalance.
+    - Early stopping based on validation performance.
+  - **Evaluation Metrics:** Accuracy and Intersection over Union (IoU).
+  - **Explainability:** Grad-CAM and Layer-wise Relevance Propagation (LRP) for model interpretability.
+
+  ### Exploratory Data Analysis (EDA) Findings
+  - Image sizes varied from 256×256 to 1024×1024 pixels.
+  - Mean nuclei count per image: 71 (±9).
+  - Normalized contrast ranged from 0.4 to 0.9; mean intensity ranged from 0.2 to 0.8.
+  - Nuclei areas ranged from 8–45 pixels; circularity indices ranged from 0.6–0.9.
+  - ~27% of images had significant nuclei overlap, complicating boundary delineation.
+  - These observations motivated multi-scale processing, robust normalization, and boundary-aware segmentation.
+
+  ### Working Architecture (U-Net Implementation)
+  - **Encoder–Decoder U-Net** with symmetric contracting and expanding paths.
+  - **Contracting path:** Five blocks with dual convolution layers, batch normalization, ReLU, and max pooling.
+  - **Residual connections** within blocks to improve gradient flow and convergence.
+  - **Feature map progression:** 16 → 32 → 64 → 128 → 256 channels.
+  - **Regularization:** Dropout in encoder blocks.
+  - **Expanding path:** Transposed convolutions for upsampling with skip connections via concatenation.
+  - **Output:** Single-channel sigmoid activation for binary segmentation.
+  - **Model size:** ~1.94 million trainable parameters.
+
+  ### Results and Evaluation Highlights
+  - **Training accuracy:** 0.9710; **Validation accuracy:** 0.9705.
+  - **Training IoU:** 0.8829; **Validation IoU:** 0.8826.
+  - **Validation loss:** 0.0717 (training loss 0.0753), indicating stable generalization.
+  - **Comparison with SOTA models (Accuracy / Precision / Recall / IoU):**
+    - DeepLabV3+: 91.2 / 88.7 / 89.1 / 80.5
+    - DeepResNet: 94.6 / 88.6 / 81.7 / 85.3
+    - **Proposed U-Net:** 97.5 / 94.5 / 95.1 / 88.2
+  - **Dataset split robustness (IoU):**
+    - Original (670/10/60): 0.88
+    - 80/10/10 (592/74/74): 0.85
+    - 70/20/10 (518/148/74): 0.83
+
+  ### Model Explainability
+  - **Grad-CAM:** Highlighted nuclear boundaries as primary decision regions across varying densities.
+  - **LRP:** Produced fine-grained pixel attributions; mean relevance 0.45 with 31,988 positively contributing regions and confidence score 0.902, confirming biologically meaningful attention.
+
+  ### Limitations and Practical Considerations
+  - Training required ~2.5 hours on an NVIDIA RTX 3060 GPU.
+  - Inference averaged ~99.37 ms per image on the same hardware.
+  - Study focused on the 2018 Data Science Bowl dataset; generalization to other modalities requires validation.
+
+  ### Conclusion from the Paper
+  The paper demonstrates that a carefully modified U-Net architecture, combined with strong preprocessing, augmentation, and explainability methods, delivers accurate and interpretable nuclei segmentation. It addresses the core biomedical imaging challenge of reliable nuclei delineation across heterogeneous image conditions and supports practical deployment in research and diagnostic workflows.
+
   ## Project Motivation
 
   Detecting nuclei accurately is essential for:
