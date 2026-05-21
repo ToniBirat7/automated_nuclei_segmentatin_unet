@@ -1,0 +1,30 @@
+# Claude Code — files to exclude from context and search
+
+# Large dataset
+Nuclei_Dataset/
+
+# Model binaries
+*.h5
+*.onnx
+*.pb
+
+# Built artifacts
+frontend/.next/
+frontend/node_modules/
+backend/.venv/
+
+# Large image collections
+docs/layer-filters/
+docs/performance-images/
+docs/eval-images/
+
+# Archives
+*.rar
+*.zip
+*.7z
+
+# PDFs
+*.pdf
+
+# Lock files (too noisy for context)
+frontend/package-lock.json
