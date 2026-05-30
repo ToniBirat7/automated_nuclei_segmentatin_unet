@@ -1,4 +1,4 @@
-# Production compose — standalone (no port exposure, proxy_net for nginx routing)
+# Production compose — frontend exposed on localhost:3001 for system nginx
 # Usage on VM: docker compose -f docker-compose.prod.yml up -d
 # Build:       docker compose -f docker-compose.prod.yml build --pull
 
@@ -20,11 +20,11 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
-    networks:
-      - default
 
   frontend:
     build: ./frontend
+    ports:
+      - "127.0.0.1:3001:3000"
     environment:
       - BACKEND_URL=http://backend:8000
     mem_limit: 256m
@@ -33,13 +33,3 @@ services:
       backend:
         condition: service_healthy
     restart: unless-stopped
-    networks:
-      default: {}
-      proxy_net:
-        aliases:
-          - nuclei-frontend    # BCU nginx proxies to this alias
-
-networks:
-  default: {}
-  proxy_net:
-    external: true             # created once on VM: docker network create proxy_net
