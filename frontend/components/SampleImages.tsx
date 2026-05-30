@@ -4,12 +4,12 @@ import { useEffect, useState } from "react";
 import { fetchSamples, SampleImage } from "@/lib/api";
 
 const FALLBACK_SAMPLES: SampleImage[] = [
-  { name: "sample_01.png", url: "/samples/sample_01.png", description: "Dense nuclei — fluorescence" },
-  { name: "sample_02.png", url: "/samples/sample_02.png", description: "Dense nuclei — high overlap" },
-  { name: "sample_03.png", url: "/samples/sample_03.png", description: "Mixed density — varied sizes" },
-  { name: "sample_04.png", url: "/samples/sample_04.png", description: "High contrast brightfield" },
-  { name: "sample_05.png", url: "/samples/sample_05.png", description: "Fluorescence — medium density" },
-  { name: "sample_06.png", url: "/samples/sample_06.png", description: "Phase contrast imaging" },
+  { name: "sample_01.png", url: "/samples/sample_01.png", description: "Fluorescence — ring colony" },
+  { name: "sample_02.png", url: "/samples/sample_02.png", description: "Dense cluster — overlapping" },
+  { name: "sample_03.png", url: "/samples/sample_03.png", description: "Mixed density — brightfield" },
+  { name: "sample_04.png", url: "/samples/sample_04.png", description: "Test set — high density" },
+  { name: "sample_05.png", url: "/samples/sample_05.png", description: "Test set — sparse field" },
+  { name: "sample_06.png", url: "/samples/sample_06.png", description: "Brightfield — varied sizes" },
 ];
 
 interface SampleImagesProps {
