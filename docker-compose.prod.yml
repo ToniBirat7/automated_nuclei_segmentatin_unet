@@ -10,7 +10,7 @@ services:
       - ./backend/samples:/app/samples:ro
     environment:
       - MODEL_PATH=/app/models/unet_nuclei.onnx
-      - CORS_ORIGINS=https://nuclei.birat.codes
+      - CORS_ORIGINS=https://nuclei.biratcodes.dev
       - ORT_THREADS=1
     mem_limit: 512m
     cpus: '1.0'

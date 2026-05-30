@@ -1,4 +1,4 @@
-name: Deploy Nuclei Segmentation to birat.codes
+name: Deploy Nuclei Segmentation to biratcodes.dev
 
 on:
   workflow_dispatch:

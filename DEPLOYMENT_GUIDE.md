@@ -1,5 +1,5 @@
 # Production Deployment Guide
-**DigitalOcean SGP1 · bcuams.birat.codes + nuclei.birat.codes**
+**DigitalOcean SGP1 · bcuams.biratcodes.dev + nuclei.biratcodes.dev**
 
 ---
 
@@ -11,8 +11,8 @@
 | Reserved IP (DNS target) | `209.38.56.176` |
 | Region | SGP1 (Singapore) |
 | Spec | 2 vCPU · 2 GB RAM · 50 GB SSD |
-| BCU domain | `bcuams.birat.codes` |
-| Nuclei domain | `nuclei.birat.codes` |
+| BCU domain | `bcuams.biratcodes.dev` |
+| Nuclei domain | `nuclei.biratcodes.dev` |
 
 > ⚠️ **Face recognition** in BCU uses `/dev/video0` (webcam). DigitalOcean VMs have no physical camera — this feature will be disabled. All other BCU features (attendance, auth, WebSocket) work normally.
 
@@ -28,12 +28,12 @@ Internet :80/:443
   UFW: 80 ✓  443 ✓  22 ✗ (internet) — SSH only via Tailscale
      │
   BCU nginx container (port 80:80, 443:443)
-     ├── bcuams.birat.codes → frontend:3000 (BCU Next.js)
+     ├── bcuams.biratcodes.dev → frontend:3000 (BCU Next.js)
      │     ├── /api/django/* → django:8000
      │     ├── /ws/*         → django:8000 (WebSocket)
      │     ├── /static/*     → volume
      │     └── /media/*      → volume
-     └── nuclei.birat.codes → nuclei-frontend:3000 (via proxy_net)
+     └── nuclei.biratcodes.dev → nuclei-frontend:3000 (via proxy_net)
            └── internal      → backend:8000 (nuclei default network)
 ```
 
@@ -41,11 +41,11 @@ Internet :80/:443
 
 ## Step 0 — DNS (do first, propagates while you work)
 
-At your DNS provider (wherever `birat.codes` is managed), add:
+At your DNS provider (wherever `biratcodes.dev` is managed), add:
 
 ```
-A   bcuams.birat.codes    209.38.56.176   TTL 300
-A   nuclei.birat.codes    209.38.56.176   TTL 300
+A   bcuams.biratcodes.dev    209.38.56.176   TTL 300
+A   nuclei.biratcodes.dev    209.38.56.176   TTL 300
 ```
 
 Both point to the **reserved IP**, not the ephemeral one.
@@ -280,8 +280,8 @@ Fill in `.env`:
 ```bash
 SECRET_KEY=<generate: python3 -c "import secrets; print(secrets.token_hex(50))">
 DEBUG=False
-ALLOWED_HOSTS=bcuams.birat.codes,127.0.0.1,localhost
-FRONTEND_URLS=https://bcuams.birat.codes,http://localhost
+ALLOWED_HOSTS=bcuams.biratcodes.dev,127.0.0.1,localhost
+FRONTEND_URLS=https://bcuams.biratcodes.dev,http://localhost
 
 # SQLite (default for Docker — no separate DB needed)
 DB_NAME=/app/data/db.sqlite3
@@ -297,13 +297,13 @@ The BCU nginx needs two changes: (1) add the nuclei server block, (2) join `prox
 
 ### 14a. Update `/srv/bcu/nginx/nginx.conf`
 
-Change `server_name _;` to `server_name bcuams.birat.codes;` and add a second server block:
+Change `server_name _;` to `server_name bcuams.biratcodes.dev;` and add a second server block:
 
 ```nginx
 # BCU AMS — primary app
 server {
     listen 80;
-    server_name bcuams.birat.codes;
+    server_name bcuams.biratcodes.dev;
     client_max_body_size 10M;
 
     location /static/ {
@@ -355,7 +355,7 @@ server {
 # Nuclei Segmentation — routes to nuclei-frontend on proxy_net
 server {
     listen 80;
-    server_name nuclei.birat.codes;
+    server_name nuclei.biratcodes.dev;
     client_max_body_size 15M;
 
     location / {
@@ -418,7 +418,7 @@ docker compose logs nginx
 
 Verify:
 ```bash
-curl -H "Host: bcuams.birat.codes" http://localhost/api/django/
+curl -H "Host: bcuams.biratcodes.dev" http://localhost/api/django/
 # → 401 or 200 (not 502)
 ```
 
@@ -439,7 +439,7 @@ Verify internal routing:
 docker exec $(docker ps -qf name=nuclei_backend) curl -s http://localhost:8000/api/v1/health
 
 # Frontend reachable via proxy_net alias
-curl -H "Host: nuclei.birat.codes" http://localhost/
+curl -H "Host: nuclei.biratcodes.dev" http://localhost/
 # → should return HTML (200)
 ```
 
@@ -457,8 +457,8 @@ cd /srv/bcu && docker compose stop nginx
 
 # Obtain certificates for both domains
 certbot certonly --standalone \
-  -d bcuams.birat.codes \
-  -d nuclei.birat.codes \
+  -d bcuams.biratcodes.dev \
+  -d nuclei.biratcodes.dev \
   --agree-tos --email biratgautam09@gmail.com --non-interactive
 
 # Restart BCU nginx
@@ -473,18 +473,18 @@ Replace the two server blocks with HTTPS-enabled versions:
 # Redirect HTTP → HTTPS
 server {
     listen 80;
-    server_name bcuams.birat.codes nuclei.birat.codes;
+    server_name bcuams.biratcodes.dev nuclei.biratcodes.dev;
     return 301 https://$host$request_uri;
 }
 
 # BCU AMS — HTTPS
 server {
     listen 443 ssl;
-    server_name bcuams.birat.codes;
+    server_name bcuams.biratcodes.dev;
     client_max_body_size 10M;
 
-    ssl_certificate     /etc/letsencrypt/live/bcuams.birat.codes/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/bcuams.birat.codes/privkey.pem;
+    ssl_certificate     /etc/letsencrypt/live/bcuams.biratcodes.dev/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/bcuams.biratcodes.dev/privkey.pem;
     ssl_protocols       TLSv1.2 TLSv1.3;
     ssl_ciphers         HIGH:!aNULL:!MD5;
 
@@ -526,11 +526,11 @@ server {
 # Nuclei Segmentation — HTTPS
 server {
     listen 443 ssl;
-    server_name nuclei.birat.codes;
+    server_name nuclei.biratcodes.dev;
     client_max_body_size 15M;
 
-    ssl_certificate     /etc/letsencrypt/live/bcuams.birat.codes/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/bcuams.birat.codes/privkey.pem;
+    ssl_certificate     /etc/letsencrypt/live/bcuams.biratcodes.dev/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/bcuams.biratcodes.dev/privkey.pem;
     ssl_protocols       TLSv1.2 TLSv1.3;
     ssl_ciphers         HIGH:!aNULL:!MD5;
 
@@ -568,11 +568,11 @@ echo "0 */12 * * * root certbot renew --quiet --deploy-hook 'cd /srv/bcu && dock
 
 ```bash
 # Both domains respond with HTTPS
-curl -I https://bcuams.birat.codes
-curl -I https://nuclei.birat.codes
+curl -I https://bcuams.biratcodes.dev
+curl -I https://nuclei.biratcodes.dev
 
 # Nuclei segmentation health
-curl https://nuclei.birat.codes/api/v1/health
+curl https://nuclei.biratcodes.dev/api/v1/health
 # → {"status":"ok","model_loaded":true}
 
 # Memory check
