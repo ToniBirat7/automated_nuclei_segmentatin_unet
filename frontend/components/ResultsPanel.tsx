@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Download, RotateCcw } from "lucide-react";
 import { SegmentationResult, base64ToUrl } from "@/lib/api";
@@ -26,7 +27,13 @@ function downloadImage(dataUrl: string, filename: string) {
 }
 
 export default function ResultsPanel({ result, originalFile, onReset }: ResultsPanelProps) {
-  const originalUrl = URL.createObjectURL(originalFile);
+  const [originalUrl, setOriginalUrl] = useState<string>("");
+
+  useEffect(() => {
+    const url = URL.createObjectURL(originalFile);
+    setOriginalUrl(url);
+    return () => URL.revokeObjectURL(url);
+  }, [originalFile]);
 
   const getUrl = (key: string): string => {
     if (key === "original") return originalUrl;
@@ -55,7 +62,7 @@ export default function ResultsPanel({ result, originalFile, onReset }: ResultsP
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
         {PANELS.map(({ key, label }, i) => {
           const url = getUrl(key);
-          const filename = `nuclei_${key}_${Date.now()}.png`;
+          const filename = `nuclei_${key}.png`;
           return (
             <motion.div
               key={key}
@@ -64,19 +71,26 @@ export default function ResultsPanel({ result, originalFile, onReset }: ResultsP
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: i * 0.08 }}
             >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={url} alt={label} className="w-full aspect-square object-cover" />
+              {url && (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={url} alt={label} className="w-full aspect-square object-cover" />
+              )}
+              {!url && (
+                <div className="w-full aspect-square bg-slate-800 animate-pulse" />
+              )}
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
               <div className="absolute bottom-0 left-0 right-0 p-2 flex items-center justify-between">
                 <span className="text-xs text-slate-200 font-medium">{label}</span>
-                <button
-                  onClick={() => downloadImage(url, filename)}
-                  className="opacity-0 group-hover:opacity-100 transition-opacity
-                    p-1 rounded bg-slate-800/80 text-slate-300 hover:text-white"
-                  title="Download"
-                >
-                  <Download className="w-3.5 h-3.5" />
-                </button>
+                {url && (
+                  <button
+                    onClick={() => downloadImage(url, filename)}
+                    className="opacity-0 group-hover:opacity-100 transition-opacity
+                      p-1 rounded bg-slate-800/80 text-slate-300 hover:text-white"
+                    title="Download"
+                  >
+                    <Download className="w-3.5 h-3.5" />
+                  </button>
+                )}
               </div>
             </motion.div>
           );

@@ -1,17 +1,32 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useState, useEffect } from "react";
 import { useDropzone, FileRejection } from "react-dropzone";
 import { motion, AnimatePresence } from "framer-motion";
-import { Upload, ImageIcon, AlertCircle } from "lucide-react";
+import { Upload, ImageIcon, AlertCircle, FileImage } from "lucide-react";
 
 interface UploadZoneProps {
   onFileSelect: (file: File) => void;
   isProcessing: boolean;
 }
 
+function formatBytes(bytes: number): string {
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+}
+
 export default function UploadZone({ onFileSelect, isProcessing }: UploadZoneProps) {
   const [error, setError] = useState<string | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!selectedFile) return;
+    const url = URL.createObjectURL(selectedFile);
+    setPreviewUrl(url);
+    return () => URL.revokeObjectURL(url);
+  }, [selectedFile]);
 
   const onDrop = useCallback(
     (accepted: File[], rejected: FileRejection[]) => {
@@ -20,7 +35,10 @@ export default function UploadZone({ onFileSelect, isProcessing }: UploadZonePro
         setError(rejected[0].errors[0].message);
         return;
       }
-      if (accepted.length > 0) onFileSelect(accepted[0]);
+      if (accepted.length > 0) {
+        setSelectedFile(accepted[0]);
+        onFileSelect(accepted[0]);
+      }
     },
     [onFileSelect]
   );
@@ -32,6 +50,26 @@ export default function UploadZone({ onFileSelect, isProcessing }: UploadZonePro
     multiple: false,
     disabled: isProcessing,
   });
+
+  if (isProcessing && selectedFile && previewUrl) {
+    return (
+      <div className="w-full rounded-2xl border border-slate-700 bg-slate-900/50 p-6">
+        <div className="flex items-center gap-4">
+          {/* Thumbnail */}
+          <div className="flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border border-slate-700">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={previewUrl} alt="preview" className="w-full h-full object-cover" />
+          </div>
+          {/* File info */}
+          <div className="min-w-0 flex-1">
+            <p className="text-sm font-medium text-slate-200 truncate">{selectedFile.name}</p>
+            <p className="text-xs text-slate-500 mt-0.5">{formatBytes(selectedFile.size)}</p>
+          </div>
+          <FileImage className="w-5 h-5 text-cyan-400 flex-shrink-0" />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full">
@@ -45,7 +83,6 @@ export default function UploadZone({ onFileSelect, isProcessing }: UploadZonePro
       >
         <input {...getInputProps()} />
 
-        {/* Animated scanning border when dragging */}
         {isDragActive && (
           <motion.div
             className="absolute inset-0 rounded-2xl border-2 border-cyan-400"

@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: nuclei-backend
+    env: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    plan: free
+    envVars:
+      - key: MODEL_PATH
+        value: models/unet_nuclei.onnx
+      - key: CORS_ORIGINS
+        value: https://nuclei-frontend.vercel.app,http://localhost:3000
+      - key: ORT_THREADS
+        value: "2"
+    healthCheckPath: /api/v1/health
