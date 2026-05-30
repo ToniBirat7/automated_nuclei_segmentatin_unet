@@ -5,7 +5,7 @@
 [![Next.js](https://img.shields.io/badge/Next.js-16-black?logo=next.js&logoColor=white)](https://nextjs.org)
 [![TensorFlow](https://img.shields.io/badge/TensorFlow-2.10-FF6F00?logo=tensorflow&logoColor=white)](https://tensorflow.org)
 [![Docker](https://img.shields.io/badge/Docker-ready-2496ED?logo=docker&logoColor=white)](https://docker.com)
-[![CI](https://github.com/ToniBirat7/Nuclei_Segmentation_U-Net_VGG_x_RFC/actions/workflows/ci.yml/badge.svg)](https://github.com/ToniBirat7/Nuclei_Segmentation_U-Net_VGG_x_RFC/actions/workflows/ci.yml)
+[![CI](https://github.com/ToniBirat7/automated_nuclei_segmentatin_unet/actions/workflows/ci.yml/badge.svg)](https://github.com/ToniBirat7/automated_nuclei_segmentatin_unet/actions/workflows/ci.yml)
 [![DOI](https://img.shields.io/badge/DOI-10.3126%2Finjet.v2i2.78595-blue)](https://doi.org/10.3126/injet.v2i2.78595)
 
 U-Net deep learning model for automated nuclei detection in microscopy images — published at **KEC Conference 2025 / InJET Special Issue**. Upload a microscopy image and get instant segmentation masks, confidence heatmaps, and nuclei counts.
