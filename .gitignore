@@ -40,3 +40,7 @@ Thumbs.db
 
 # Jupyter
 .ipynb_checkpoints/
+
+# Obsidian workspace state (auto-generated)
+.wiki-nuclei-unet/.obsidian/workspace.json
+.wiki-nuclei-unet/.obsidian/graph.json

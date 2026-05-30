@@ -1,22 +1,16 @@
 import { NextResponse } from "next/server";
 
-const BACKEND_URL = process.env.BACKEND_URL || "http://localhost:8000";
+const SAMPLES = [
+  { name: "sample_01.png", description: "Dense nuclei — high overlap" },
+  { name: "sample_02.png", description: "Sparse nuclei — clear boundaries" },
+  { name: "sample_03.png", description: "Mixed density — varied sizes" },
+  { name: "sample_04.png", description: "High contrast fluorescence" },
+  { name: "sample_05.png", description: "Low contrast brightfield" },
+  { name: "sample_06.png", description: "Phase contrast imaging" },
+];
 
 export async function GET() {
-  try {
-    const res = await fetch(`${BACKEND_URL}/api/v1/samples`);
-    const data = await res.json();
-
-    // Rewrite backend sample URLs to go through our proxy
-    if (data.samples) {
-      data.samples = data.samples.map((s: { name: string; url: string; description: string }) => ({
-        ...s,
-        url: `${BACKEND_URL}${s.url}`,
-      }));
-    }
-
-    return NextResponse.json(data);
-  } catch {
-    return NextResponse.json({ samples: [] });
-  }
+  return NextResponse.json({
+    samples: SAMPLES.map((s) => ({ ...s, url: `/samples/${s.name}` })),
+  });
 }
