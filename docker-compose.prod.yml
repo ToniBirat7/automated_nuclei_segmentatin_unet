@@ -1,0 +1,45 @@
+# Production compose — standalone (no port exposure, proxy_net for nginx routing)
+# Usage on VM: docker compose -f docker-compose.prod.yml up -d
+# Build:       docker compose -f docker-compose.prod.yml build --pull
+
+services:
+  backend:
+    build: ./backend
+    volumes:
+      - ./backend/models:/app/models:ro
+      - ./backend/samples:/app/samples:ro
+    environment:
+      - MODEL_PATH=/app/models/unet_nuclei.onnx
+      - CORS_ORIGINS=https://nuclei.birat.codes
+      - ORT_THREADS=1
+    mem_limit: 512m
+    cpus: '1.0'
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - default
+
+  frontend:
+    build: ./frontend
+    environment:
+      - BACKEND_URL=http://backend:8000
+    mem_limit: 256m
+    cpus: '0.5'
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      default: {}
+      proxy_net:
+        aliases:
+          - nuclei-frontend    # BCU nginx proxies to this alias
+
+networks:
+  default: {}
+  proxy_net:
+    external: true             # created once on VM: docker network create proxy_net

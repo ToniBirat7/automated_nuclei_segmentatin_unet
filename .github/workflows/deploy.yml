@@ -1,9 +1,10 @@
-name: Deploy Nuclei Segmentation
+name: Deploy Nuclei Segmentation to birat.codes
 
 on:
   workflow_dispatch:
   push:
-    branches: [master]
+    branches:
+      - master
 
 jobs:
   deploy:
@@ -21,11 +22,11 @@ jobs:
           authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
           tags: tag:ci
 
-      - name: Verify Connection (Port 22 Check)
+      - name: Verify SSH reachability via Tailscale
         run: |
-          echo "Checking Tailscale status..."
+          echo "Tailscale status:"
           tailscale status
-          echo "Testing SSH connection to ${{ secrets.VM_HOST }} on port 22..."
+          echo "Testing SSH to ${{ secrets.VM_HOST }} ..."
           nc -zv ${{ secrets.VM_HOST }} 22
 
       - name: Deploy to VM via SSH
@@ -36,19 +37,16 @@ jobs:
           key: ${{ secrets.VM_SSH_KEY }}
           port: 22
           timeout: 30s
-          command_timeout: 25m
+          command_timeout: 20m
           script_stop: true
           script: |
-            cd ~/nuclei
+            cd /srv/nuclei
 
             git stash push --include-untracked -m "pre-deploy-$(date +%s)" || true
-
             git pull --ff-only origin master
 
-            docker compose build
-
-            docker compose up -d
-
+            docker compose -f docker-compose.prod.yml build
+            docker compose -f docker-compose.prod.yml up -d
             docker image prune -f
 
-            echo "Nuclei Segmentation deployed successfully at $(date)"
+            echo "Nuclei Segmentation deployed at $(date)"

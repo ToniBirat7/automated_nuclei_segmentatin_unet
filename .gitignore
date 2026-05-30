@@ -44,3 +44,6 @@ Thumbs.db
 # Obsidian workspace state (auto-generated)
 .wiki-nuclei-unet/.obsidian/workspace.json
 .wiki-nuclei-unet/.obsidian/graph.json
+
+# VM metadata (local reference only)
+vm-info.json
