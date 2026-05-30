@@ -1,0 +1,54 @@
+name: Deploy Nuclei Segmentation
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [master]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Connect to Tailscale
+        uses: tailscale/github-action@v2
+        with:
+          authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
+          tags: tag:ci
+
+      - name: Verify Connection (Port 22 Check)
+        run: |
+          echo "Checking Tailscale status..."
+          tailscale status
+          echo "Testing SSH connection to ${{ secrets.VM_HOST }} on port 22..."
+          nc -zv ${{ secrets.VM_HOST }} 22
+
+      - name: Deploy to VM via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VM_HOST }}
+          username: ${{ secrets.VM_USER }}
+          key: ${{ secrets.VM_SSH_KEY }}
+          port: 22
+          timeout: 30s
+          command_timeout: 25m
+          script_stop: true
+          script: |
+            cd ~/nuclei
+
+            git stash push --include-untracked -m "pre-deploy-$(date +%s)" || true
+
+            git pull --ff-only origin master
+
+            docker compose build
+
+            docker compose up -d
+
+            docker image prune -f
+
+            echo "Nuclei Segmentation deployed successfully at $(date)"

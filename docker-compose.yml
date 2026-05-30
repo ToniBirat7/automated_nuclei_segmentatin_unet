@@ -1,16 +1,14 @@
 services:
   backend:
     build: ./backend
-    ports:
-      - "8000:8000"
     volumes:
       - ./backend/models:/app/models:ro
       - ./backend/samples:/app/samples:ro
     environment:
       - MODEL_PATH=/app/models/unet_nuclei.onnx
-      - CORS_ORIGINS=http://localhost:3000,http://frontend:3000
-      - ORT_THREADS=2
-    mem_limit: 512m
+      - CORS_ORIGINS=https://nuclei.birat.codes,http://nuclei-frontend:3000
+      - ORT_THREADS=1
+    mem_limit: 400m
     cpus: '1.0'
     restart: unless-stopped
     healthcheck:
@@ -18,16 +16,26 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
+    networks:
+      - default
 
   frontend:
     build: ./frontend
-    ports:
-      - "3000:3000"
     environment:
       - BACKEND_URL=http://backend:8000
-    mem_limit: 256m
+    mem_limit: 200m
     cpus: '0.5'
     depends_on:
       backend:
         condition: service_healthy
     restart: unless-stopped
+    networks:
+      default: {}
+      proxy_net:
+        aliases:
+          - nuclei-frontend
+
+networks:
+  default: {}
+  proxy_net:
+    external: true
