@@ -32,7 +32,6 @@ numpy==1.26.4
     # via
     #   nuclei-segmentation-backend
     #   onnxruntime
-    #   scipy
 onnxruntime==1.20.1
     # via nuclei-segmentation-backend
 packaging==26.2
@@ -53,8 +52,6 @@ python-multipart==0.0.18
     # via nuclei-segmentation-backend
 pyyaml==6.0.3
     # via uvicorn
-scipy==1.14.1
-    # via nuclei-segmentation-backend
 starlette==0.41.3
     # via fastapi
 sympy==1.14.0

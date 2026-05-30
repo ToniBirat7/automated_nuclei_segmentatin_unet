@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
 import { Hash, Clock, Cpu, Activity } from "lucide-react";
 
 interface MetricsDisplayProps {
@@ -69,23 +68,20 @@ export default function MetricsDisplay({ nucleiCount, inferenceTime }: MetricsDi
 
   return (
     <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-      {metrics.map(({ icon: Icon, label, value, unit, color, bg, border }, i) => (
-        <motion.div
+      {metrics.map(({ icon: Icon, label, value, unit, color, bg, border }) => (
+        <div
           key={label}
           className={`rounded-xl border ${border} ${bg} p-4`}
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 + i * 0.07 }}
         >
           <div className="flex items-center gap-2 mb-2">
             <Icon className={`w-4 h-4 ${color}`} />
-            <span className="text-xs text-slate-500 font-medium">{label}</span>
+            <span className="text-xs text-slate-400 font-medium">{label}</span>
           </div>
           <div className={`text-2xl font-bold font-mono ${color}`}>
             <AnimatedNumber target={value} />
-            <span className="text-sm ml-1 font-normal text-slate-500">{unit}</span>
+            <span className="text-sm ml-1 font-normal text-slate-400">{unit}</span>
           </div>
-        </motion.div>
+        </div>
       ))}
     </div>
   );

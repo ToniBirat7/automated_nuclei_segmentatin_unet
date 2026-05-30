@@ -91,10 +91,10 @@ Check for:
 ### Backend (Python)
 
 - All inference goes through `OnnxInferenceEngine` class in `app/model.py`
-- Preprocessing mirrors training pipeline exactly: resize→256×256, normalize÷255, optional Gaussian σ=1.5
+- Preprocessing: resize→256×256 (LANCZOS), optional PIL GaussianBlur radius=1, pass raw float32 0-255 to model (normalization baked into ONNX graph)
 - Custom IoU metric: threshold at 0.5 before computing intersection/union
 - Image outputs always base64-encoded PNG in API responses
-- GPU providers: `['CUDAExecutionProvider', 'CPUExecutionProvider']` (fallback order)
+- CPU-only inference: `providers = ["CPUExecutionProvider"]`, `ORT_THREADS=2`
 
 ### Frontend (TypeScript/Next.js)
 

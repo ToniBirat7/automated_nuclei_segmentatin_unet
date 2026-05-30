@@ -9,7 +9,9 @@ services:
     environment:
       - MODEL_PATH=/app/models/unet_nuclei.onnx
       - CORS_ORIGINS=http://localhost:3000,http://frontend:3000
-      - ORT_THREADS=4
+      - ORT_THREADS=2
+    mem_limit: 512m
+    cpus: '1.0'
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/health"]
@@ -23,6 +25,8 @@ services:
       - "3000:3000"
     environment:
       - BACKEND_URL=http://backend:8000
+    mem_limit: 256m
+    cpus: '0.5'
     depends_on:
       backend:
         condition: service_healthy

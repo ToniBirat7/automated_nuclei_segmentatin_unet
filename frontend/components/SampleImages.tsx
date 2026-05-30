@@ -1,16 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
 import { fetchSamples, SampleImage } from "@/lib/api";
 
 const FALLBACK_SAMPLES: SampleImage[] = [
-  { name: "sample_01.png", url: "", description: "Dense nuclei — high overlap" },
-  { name: "sample_02.png", url: "", description: "Sparse nuclei — clear boundaries" },
-  { name: "sample_03.png", url: "", description: "Mixed density — varied sizes" },
-  { name: "sample_04.png", url: "", description: "High contrast fluorescence" },
-  { name: "sample_05.png", url: "", description: "Low contrast brightfield" },
-  { name: "sample_06.png", url: "", description: "Phase contrast imaging" },
+  { name: "sample_01.png", url: "/samples/sample_01.png", description: "Dense nuclei — fluorescence" },
+  { name: "sample_02.png", url: "/samples/sample_02.png", description: "Dense nuclei — high overlap" },
+  { name: "sample_03.png", url: "/samples/sample_03.png", description: "Mixed density — varied sizes" },
+  { name: "sample_04.png", url: "/samples/sample_04.png", description: "High contrast brightfield" },
+  { name: "sample_05.png", url: "/samples/sample_05.png", description: "Fluorescence — medium density" },
+  { name: "sample_06.png", url: "/samples/sample_06.png", description: "Phase contrast imaging" },
 ];
 
 interface SampleImagesProps {
@@ -55,19 +54,15 @@ export default function SampleImages({ onSelect, isProcessing }: SampleImagesPro
                 className="aspect-square rounded-lg bg-slate-800 animate-pulse border border-slate-800"
               />
             ))
-          : samples.map((sample, i) => (
-              <motion.button
+          : samples.map((sample) => (
+              <button
                 key={sample.name}
                 onClick={() => handleSelect(sample)}
                 disabled={isProcessing || !sample.url}
                 className={`group relative aspect-square rounded-lg overflow-hidden border border-slate-800
-                  hover:border-cyan-600 transition-all duration-200
+                  hover:border-cyan-600 hover:scale-105 transition-all duration-200
                   ${isProcessing ? "opacity-40 cursor-not-allowed" : "cursor-pointer"}
                   ${!sample.url ? "opacity-30 cursor-not-allowed" : ""}`}
-                whileHover={!isProcessing && sample.url ? { scale: 1.05 } : {}}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.05 }}
                 title={sample.description}
               >
                 {sample.url ? (
@@ -79,11 +74,11 @@ export default function SampleImages({ onSelect, isProcessing }: SampleImagesPro
                   />
                 ) : (
                   <div className="w-full h-full bg-slate-800 flex items-center justify-center">
-                    <span className="text-slate-600 text-xs font-mono">{i + 1}</span>
+                    <span className="text-slate-600 text-xs font-mono">{sample.name}</span>
                   </div>
                 )}
                 <div className="absolute inset-0 bg-cyan-900/0 group-hover:bg-cyan-900/30 transition-colors" />
-              </motion.button>
+              </button>
             ))}
       </div>
     </div>

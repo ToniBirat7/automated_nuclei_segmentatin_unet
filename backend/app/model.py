@@ -10,10 +10,10 @@ class OnnxInferenceEngine:
             raise FileNotFoundError(f"ONNX model not found: {model_path}")
 
         opts = ort.SessionOptions()
-        opts.intra_op_num_threads = int(os.getenv("ORT_THREADS", "4"))
+        opts.intra_op_num_threads = int(os.getenv("ORT_THREADS", "2"))
         opts.graph_optimization_level = ort.GraphOptimizationLevel.ORT_ENABLE_ALL
 
-        providers = ["CUDAExecutionProvider", "CPUExecutionProvider"]
+        providers = ["CPUExecutionProvider"]
 
         self.session = ort.InferenceSession(model_path, opts, providers=providers)
         self.input_name = self.session.get_inputs()[0].name

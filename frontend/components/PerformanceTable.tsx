@@ -1,7 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
-
 export default function PerformanceTable() {
   const sotas = [
     { model: "DeepLabV3+", accuracy: 91.2, precision: 88.7, recall: 89.1, iou: 80.5 },
@@ -34,17 +32,14 @@ export default function PerformanceTable() {
               </tr>
             </thead>
             <tbody>
-              {sotas.map((row, i) => (
-                <motion.tr
+              {sotas.map((row) => (
+                <tr
                   key={row.model}
                   className={`border-b border-slate-800/50 ${
                     row.highlight
                       ? "bg-cyan-950/30 border-l-2 border-l-cyan-500"
                       : "bg-slate-900/30"
                   }`}
-                  initial={{ opacity: 0, x: -8 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.1 }}
                 >
                   <td className={`px-4 py-3 font-medium ${row.highlight ? "text-cyan-300" : "text-slate-300"}`}>
                     {row.model}
@@ -59,7 +54,7 @@ export default function PerformanceTable() {
                       {v}%
                     </td>
                   ))}
-                </motion.tr>
+                </tr>
               ))}
             </tbody>
           </table>
@@ -83,20 +78,17 @@ export default function PerformanceTable() {
               </tr>
             </thead>
             <tbody>
-              {splits.map((row, i) => (
-                <motion.tr
+              {splits.map((row) => (
+                <tr
                   key={row.split}
                   className="border-b border-slate-800/50 bg-slate-900/30"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.3 + i * 0.08 }}
                 >
                   <td className="px-4 py-3 text-slate-300 font-medium">{row.split}</td>
                   <td className="px-4 py-3 font-mono text-slate-400">{row.train}</td>
                   <td className="px-4 py-3 font-mono text-slate-400">{row.val}</td>
                   <td className="px-4 py-3 font-mono text-slate-400">{row.test}</td>
                   <td className="px-4 py-3 font-mono text-emerald-400 font-semibold">{row.iou}</td>
-                </motion.tr>
+                </tr>
               ))}
             </tbody>
           </table>

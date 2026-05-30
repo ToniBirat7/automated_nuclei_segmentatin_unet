@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
 import { Download, RotateCcw } from "lucide-react";
 import { SegmentationResult, base64ToUrl } from "@/lib/api";
 import MetricsDisplay from "./MetricsDisplay";
@@ -41,12 +40,7 @@ export default function ResultsPanel({ result, originalFile, onReset }: ResultsP
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 24 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, ease: "easeOut" }}
-      className="w-full"
-    >
+    <div className="w-full">
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-xl font-semibold text-slate-100">Segmentation Results</h2>
         <button
@@ -60,16 +54,13 @@ export default function ResultsPanel({ result, originalFile, onReset }: ResultsP
       </div>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
-        {PANELS.map(({ key, label }, i) => {
+        {PANELS.map(({ key, label }) => {
           const url = getUrl(key);
           const filename = `nuclei_${key}.png`;
           return (
-            <motion.div
+            <div
               key={key}
               className="group relative rounded-xl overflow-hidden border border-slate-800 bg-slate-900"
-              initial={{ opacity: 0, scale: 0.96 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: i * 0.08 }}
             >
               {url && (
                 // eslint-disable-next-line @next/next/no-img-element
@@ -92,7 +83,7 @@ export default function ResultsPanel({ result, originalFile, onReset }: ResultsP
                   </button>
                 )}
               </div>
-            </motion.div>
+            </div>
           );
         })}
       </div>
@@ -101,6 +92,6 @@ export default function ResultsPanel({ result, originalFile, onReset }: ResultsP
         nucleiCount={result.nuclei_count}
         inferenceTime={result.inference_time_ms}
       />
-    </motion.div>
+    </div>
   );
 }

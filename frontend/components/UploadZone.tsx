@@ -2,7 +2,6 @@
 
 import { useCallback, useState, useEffect } from "react";
 import { useDropzone, FileRejection } from "react-dropzone";
-import { motion, AnimatePresence } from "framer-motion";
 import { Upload, ImageIcon, AlertCircle, FileImage } from "lucide-react";
 
 interface UploadZoneProps {
@@ -55,12 +54,10 @@ export default function UploadZone({ onFileSelect, isProcessing }: UploadZonePro
     return (
       <div className="w-full rounded-2xl border border-slate-700 bg-slate-900/50 p-6">
         <div className="flex items-center gap-4">
-          {/* Thumbnail */}
           <div className="flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border border-slate-700">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={previewUrl} alt="preview" className="w-full h-full object-cover" />
           </div>
-          {/* File info */}
           <div className="min-w-0 flex-1">
             <p className="text-sm font-medium text-slate-200 truncate">{selectedFile.name}</p>
             <p className="text-xs text-slate-500 mt-0.5">{formatBytes(selectedFile.size)}</p>
@@ -82,14 +79,6 @@ export default function UploadZone({ onFileSelect, isProcessing }: UploadZonePro
         } ${isProcessing ? "opacity-50 cursor-not-allowed" : ""}`}
       >
         <input {...getInputProps()} />
-
-        {isDragActive && (
-          <motion.div
-            className="absolute inset-0 rounded-2xl border-2 border-cyan-400"
-            animate={{ opacity: [0.4, 1, 0.4] }}
-            transition={{ duration: 1.2, repeat: Infinity }}
-          />
-        )}
 
         <div className="flex flex-col items-center justify-center py-16 px-8 gap-4">
           <div className={`p-4 rounded-full ${isDragActive ? "bg-cyan-900/40" : "bg-slate-800"}`}>
@@ -125,19 +114,12 @@ export default function UploadZone({ onFileSelect, isProcessing }: UploadZonePro
         </div>
       </div>
 
-      <AnimatePresence>
-        {error && (
-          <motion.div
-            initial={{ opacity: 0, y: -8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0 }}
-            className="flex items-center gap-2 mt-3 text-red-400 text-sm"
-          >
-            <AlertCircle className="w-4 h-4" />
-            {error}
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {error && (
+        <div className="flex items-center gap-2 mt-3 text-red-400 text-sm">
+          <AlertCircle className="w-4 h-4" />
+          {error}
+        </div>
+      )}
     </div>
   );
 }

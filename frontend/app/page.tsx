@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import { ExternalLink, ChevronDown, ChevronUp, Microscope, Zap, Target, Brain } from "lucide-react";
 import UploadZone from "@/components/UploadZone";
 import SampleImages from "@/components/SampleImages";
@@ -61,12 +60,7 @@ export default function Home() {
       <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 py-12 space-y-16">
 
         {/* === HERO === */}
-        <motion.section
-          initial={{ opacity: 0, y: -16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="text-center space-y-6"
-        >
+        <section className="text-center space-y-6 animate-fade-in">
           {/* Badges */}
           <div className="flex items-center justify-center gap-2 flex-wrap">
             <span className="px-3 py-1 text-xs font-mono border border-slate-700 rounded-full text-slate-400 bg-slate-900/60">
@@ -111,78 +105,49 @@ export default function Home() {
               </div>
             ))}
           </div>
-        </motion.section>
+        </section>
 
         {/* === UPLOAD / RESULTS === */}
-        <motion.section
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2, duration: 0.5 }}
-          className="space-y-4"
-        >
-          <AnimatePresence mode="wait">
-            {result && originalFile ? (
-              <ResultsPanel
-                key="results"
-                result={result}
-                originalFile={originalFile}
-                onReset={handleReset}
-              />
-            ) : (
-              <motion.div
-                key="upload"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="space-y-4"
-              >
-                <UploadZone onFileSelect={handleFile} isProcessing={isProcessing} />
+        <section className="space-y-4">
+          {result && originalFile ? (
+            <ResultsPanel
+              result={result}
+              originalFile={originalFile}
+              onReset={handleReset}
+            />
+          ) : (
+            <div className="space-y-4">
+              <UploadZone onFileSelect={handleFile} isProcessing={isProcessing} />
 
-                {/* Processing indicator */}
-                <AnimatePresence>
-                  {isProcessing && (
-                    <motion.div
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: "auto" }}
-                      exit={{ opacity: 0, height: 0 }}
-                      className="flex items-center gap-3 px-4 py-3 rounded-xl border border-cyan-900 bg-cyan-950/30"
-                    >
-                      <div className="flex gap-1">
-                        {[0, 1, 2].map((i) => (
-                          <motion.div
-                            key={i}
-                            className="w-1.5 h-1.5 rounded-full bg-cyan-400"
-                            animate={{ opacity: [0.3, 1, 0.3] }}
-                            transition={{ duration: 0.9, delay: i * 0.2, repeat: Infinity }}
-                          />
-                        ))}
-                      </div>
-                      <span className="text-sm text-cyan-300 font-mono">
-                        Segmenting nuclei...
-                      </span>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+              {/* Processing indicator */}
+              {isProcessing && (
+                <div className="flex items-center gap-3 px-4 py-3 rounded-xl border border-cyan-900 bg-cyan-950/30">
+                  <div className="flex gap-1">
+                    {[0, 1, 2].map((i) => (
+                      <span
+                        key={i}
+                        className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"
+                        style={{ animationDelay: `${i * 0.2}s` }}
+                      />
+                    ))}
+                  </div>
+                  <span className="text-sm text-cyan-300 font-mono">
+                    Segmenting nuclei...
+                  </span>
+                </div>
+              )}
 
-                {/* Error */}
-                <AnimatePresence>
-                  {error && (
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      className="px-4 py-3 rounded-xl border border-red-900 bg-red-950/30 text-red-400 text-sm"
-                    >
-                      {error}
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+              {/* Error */}
+              {error && (
+                <div className="px-4 py-3 rounded-xl border border-red-900 bg-red-950/30 text-red-400 text-sm">
+                  {error}
+                </div>
+              )}
 
-                <SampleImages onSelect={handleFile} isProcessing={isProcessing} />
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </motion.section>
+              <SampleImages onSelect={handleFile} isProcessing={isProcessing} />
+            </div>
+          )}
+        </section>
 
         {/* === MODEL ARCHITECTURE === */}
         <section className="space-y-6">
@@ -195,7 +160,7 @@ export default function Home() {
           </div>
           <div className="rounded-2xl border border-slate-800 bg-slate-900/40 p-6">
             <h3 className="text-lg font-semibold text-slate-100 mb-1">U-Net Architecture</h3>
-            <p className="text-sm text-slate-500 mb-6">
+            <p className="text-sm text-slate-400 mb-6">
               Symmetric encoder-decoder with skip connections. 1.94M trainable parameters.
               Input 256×256 RGB → Output 256×256 binary mask.
             </p>
@@ -233,57 +198,50 @@ export default function Home() {
             )}
           </button>
 
-          <AnimatePresence>
-            {techOpen && (
-              <motion.div
-                initial={{ height: 0, opacity: 0 }}
-                animate={{ height: "auto", opacity: 1 }}
-                exit={{ height: 0, opacity: 0 }}
-                transition={{ duration: 0.3 }}
-                className="overflow-hidden"
-              >
-                <div className="px-6 pb-6 space-y-6 border-t border-slate-800">
-                  <div className="grid sm:grid-cols-2 gap-6 pt-4">
+          <div
+            className="overflow-hidden transition-all duration-300"
+            style={{ maxHeight: techOpen ? "1000px" : "0px" }}
+          >
+            <div className="px-6 pb-6 space-y-6 border-t border-slate-800">
+              <div className="grid sm:grid-cols-2 gap-6 pt-4">
+                <div>
+                  <h4 className="text-sm font-semibold text-slate-200 mb-2">Preprocessing Pipeline</h4>
+                  <ol className="space-y-1 text-sm text-slate-300">
+                    <li className="flex gap-2"><span className="text-cyan-500 font-mono">1.</span> Resize to 256×256 (LANCZOS)</li>
+                    <li className="flex gap-2"><span className="text-cyan-500 font-mono">2.</span> Gaussian filter σ≈1.0 (noise reduction)</li>
+                    <li className="flex gap-2"><span className="text-cyan-500 font-mono">3.</span> Normalize pixel values ÷ 255</li>
+                    <li className="flex gap-2"><span className="text-cyan-500 font-mono">4.</span> Forward pass through U-Net</li>
+                    <li className="flex gap-2"><span className="text-cyan-500 font-mono">5.</span> Threshold at 0.5 → binary mask</li>
+                    <li className="flex gap-2"><span className="text-cyan-500 font-mono">6.</span> Count connected components</li>
+                  </ol>
+                </div>
+                <div>
+                  <h4 className="text-sm font-semibold text-slate-200 mb-2">Explainability</h4>
+                  <div className="space-y-3 text-sm text-slate-300">
                     <div>
-                      <h4 className="text-sm font-semibold text-slate-300 mb-2">Preprocessing Pipeline</h4>
-                      <ol className="space-y-1 text-sm text-slate-500">
-                        <li className="flex gap-2"><span className="text-cyan-600 font-mono">1.</span> Resize to 256×256 (LANCZOS)</li>
-                        <li className="flex gap-2"><span className="text-cyan-600 font-mono">2.</span> Gaussian filter σ=1.5 (noise reduction)</li>
-                        <li className="flex gap-2"><span className="text-cyan-600 font-mono">3.</span> Normalize pixel values ÷ 255</li>
-                        <li className="flex gap-2"><span className="text-cyan-600 font-mono">4.</span> Forward pass through U-Net</li>
-                        <li className="flex gap-2"><span className="text-cyan-600 font-mono">5.</span> Threshold at 0.5 → binary mask</li>
-                        <li className="flex gap-2"><span className="text-cyan-600 font-mono">6.</span> Count connected components</li>
-                      </ol>
+                      <span className="text-amber-400 font-medium">Grad-CAM</span> — attention heatmaps showing
+                      which regions influenced predictions. Consistently highlights nuclear boundaries (red)
+                      vs background (blue).
                     </div>
                     <div>
-                      <h4 className="text-sm font-semibold text-slate-300 mb-2">Explainability</h4>
-                      <div className="space-y-3 text-sm text-slate-500">
-                        <div>
-                          <span className="text-amber-400 font-medium">Grad-CAM</span> — attention heatmaps showing
-                          which regions influenced predictions. Consistently highlights nuclear boundaries (red)
-                          vs background (blue).
-                        </div>
-                        <div>
-                          <span className="text-violet-400 font-medium">LRP</span> — pixel-wise relevance
-                          propagation. Mean relevance 0.45, confidence score 0.902. Confirms model
-                          focuses on biologically meaningful nuclear features.
-                        </div>
-                      </div>
+                      <span className="text-violet-400 font-medium">LRP</span> — pixel-wise relevance
+                      propagation. Mean relevance 0.45, confidence score 0.902. Confirms model
+                      focuses on biologically meaningful nuclear features.
                     </div>
-                  </div>
-
-                  <div>
-                    <h4 className="text-sm font-semibold text-slate-300 mb-2">Dataset</h4>
-                    <p className="text-sm text-slate-500">
-                      2018 Kaggle Data Science Bowl nuclei dataset — 740 microscopy images (670 train / 10 val / 60 test).
-                      Stratified sampling across imaging modalities and nuclear densities. Mean 71±9 nuclei per image.
-                      ~27% of images contain significant nuclear overlap.
-                    </p>
                   </div>
                 </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
+              </div>
+
+              <div>
+                <h4 className="text-sm font-semibold text-slate-200 mb-2">Dataset</h4>
+                <p className="text-sm text-slate-300">
+                  2018 Kaggle Data Science Bowl nuclei dataset — 740 microscopy images (670 train / 10 val / 60 test).
+                  Stratified sampling across imaging modalities and nuclear densities. Mean 71±9 nuclei per image.
+                  ~27% of images contain significant nuclear overlap.
+                </p>
+              </div>
+            </div>
+          </div>
         </section>
 
         {/* === FOOTER === */}

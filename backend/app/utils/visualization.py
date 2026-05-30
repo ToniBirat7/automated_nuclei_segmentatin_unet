@@ -2,7 +2,6 @@ import base64
 import io
 import numpy as np
 from PIL import Image
-from scipy.ndimage import label
 
 
 def encode_image_base64(arr: np.ndarray) -> str:
@@ -15,13 +14,12 @@ def encode_image_base64(arr: np.ndarray) -> str:
 
 def apply_colormap_viridis(prob_map: np.ndarray) -> np.ndarray:
     """Apply viridis colormap to a 2D probability map (0-1). Returns uint8 RGB."""
-    # Viridis colormap approximation via key anchor points
     viridis = np.array([
-        [68, 1, 84],    # 0.0
-        [59, 82, 139],  # 0.25
-        [33, 145, 140], # 0.5
-        [94, 201, 98],  # 0.75
-        [253, 231, 37], # 1.0
+        [68, 1, 84],    # 0.0 — deep purple
+        [59, 82, 139],  # 0.25 — blue
+        [33, 145, 140], # 0.5 — teal
+        [94, 201, 98],  # 0.75 — green
+        [253, 231, 37], # 1.0 — yellow
     ], dtype=np.float32)
 
     indices = prob_map * 4.0
@@ -36,7 +34,6 @@ def apply_colormap_viridis(prob_map: np.ndarray) -> np.ndarray:
 def create_overlay(original: np.ndarray, mask: np.ndarray, alpha: float = 0.45) -> np.ndarray:
     """Overlay binary mask on original image with cyan color."""
     overlay = original.copy().astype(np.float32)
-    # Nuclei highlighted in cyan-green
     mask_bool = mask > 0.5
     overlay[mask_bool, 0] = overlay[mask_bool, 0] * (1 - alpha)
     overlay[mask_bool, 1] = overlay[mask_bool, 1] * (1 - alpha) + 255 * alpha * 0.85
@@ -45,9 +42,22 @@ def create_overlay(original: np.ndarray, mask: np.ndarray, alpha: float = 0.45) 
 
 
 def count_nuclei(binary_mask: np.ndarray) -> int:
-    """Count connected components in binary mask."""
-    _, num_features = label(binary_mask > 0.5)
-    return int(num_features)
+    """Count connected components via iterative BFS. No external deps."""
+    mask = binary_mask.astype(bool)
+    labeled = np.zeros(mask.shape, dtype=np.int32)
+    label_id = 0
+    rows, cols = mask.shape
+    for r in range(rows):
+        for c in range(cols):
+            if mask[r, c] and labeled[r, c] == 0:
+                label_id += 1
+                stack = [(r, c)]
+                while stack:
+                    y, x = stack.pop()
+                    if 0 <= y < rows and 0 <= x < cols and mask[y, x] and labeled[y, x] == 0:
+                        labeled[y, x] = label_id
+                        stack += [(y - 1, x), (y + 1, x), (y, x - 1), (y, x + 1)]
+    return label_id
 
 
 def process_prediction(
@@ -65,14 +75,11 @@ def process_prediction(
 
     nuclei_count = count_nuclei(binary_mask)
 
-    # Binary mask as grayscale image
     mask_img = (binary_mask * 255).astype(np.uint8)
     mask_rgb = np.stack([mask_img, mask_img, mask_img], axis=-1)
 
-    # Confidence heatmap
     confidence_rgb = apply_colormap_viridis(prob_map)
 
-    # Overlay
     overlay_rgb = create_overlay(original_arr, binary_mask)
 
     return {
