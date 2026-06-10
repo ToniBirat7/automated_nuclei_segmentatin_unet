@@ -1,0 +1,102 @@
+{
+  "schemaVersion": 1,
+  "id": "automated-nuclei-segmentation-unet",
+  "name": "Automated Nuclei Segmentation Unet",
+  "description": "![Python](https://python.org)",
+  "status": "active",
+  "statusReason": null,
+  "currentFeature": "local-dev docker-compose + untrack obsidian UI state",
+  "currentPhase": "deploy",
+  "milestones": [],
+  "links": [],
+  "prs": [],
+  "_conflicts": [],
+  "repo": {
+    "hasGit": true,
+    "defaultBranch": "master",
+    "currentBranch": "master",
+    "remoteUrl": "github.com/ToniBirat7/automated_nuclei_segmentatin_unet",
+    "githubSlug": "ToniBirat7/automated_nuclei_segmentatin_unet",
+    "lastCommit": {
+      "sha": "d07cc84b",
+      "subject": "chore: local-dev docker-compose + untrack obsidian UI state",
+      "authoredAt": "2026-05-31T04:46:40+00:00",
+      "ageDays": 10.2
+    },
+    "dirty": true,
+    "ahead": null,
+    "behind": null,
+    "ci": "failure"
+  },
+  "branches": [
+    {
+      "name": "master",
+      "lastCommitAt": "2026-05-31T04:46:40+00:00",
+      "ageDays": 10.2,
+      "isCurrent": true,
+      "merged": false,
+      "linkedPrNumber": null
+    }
+  ],
+  "techStack": {
+    "languages": [
+      "Python",
+      "JavaScript",
+      "TypeScript"
+    ],
+    "runtimes": [
+      "node"
+    ],
+    "frameworks": [
+      "Next.js",
+      "React",
+      "Tailwind",
+      "FastAPI"
+    ],
+    "packageManager": "uv",
+    "detectedFrom": [
+      "backend/pyproject.toml",
+      "frontend/package.json"
+    ]
+  },
+  "wikiRef": {
+    "present": false,
+    "path": "wiki/",
+    "pages": null,
+    "lastIndexedAt": null
+  },
+  "architecture": {
+    "components": [
+      "backend",
+      "dataset",
+      "docs",
+      "frontend",
+      "scripts"
+    ],
+    "summary": "TensorFlow U-Net served via FastAPI + ONNX Runtime backend; Next.js 14 + Tailwind frontend; Dockerized on DigitalOcean.",
+    "overviewDoc": "overview.md"
+  },
+  "human": {
+    "name": null,
+    "description": null,
+    "architectureSummary": null,
+    "techStackExtra": {
+      "languages": [],
+      "runtimes": [],
+      "frameworks": []
+    },
+    "notes": null,
+    "pinned": false
+  },
+  "metrics": {
+    "openTasks": 0,
+    "doingTasks": 0,
+    "doneTasks": 0,
+    "openPrs": 0,
+    "staleBranches": 0,
+    "commitsLast7d": 0,
+    "commitsLast30d": 15
+  },
+  "generatedAt": "2026-06-10T09:16:55.064750+00:00",
+  "generatedBy": "pulse-bulk@0.1.0"
+}
