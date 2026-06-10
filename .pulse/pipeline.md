@@ -8,5 +8,5 @@
 _How you run, build, test, and ship this project._
 
 <!-- pulse:auto:start -->
-_machine-generated pipeline summary appears here_
+Train U-Net -> export ONNX -> FastAPI inference (CPU) + Next.js UI -> docker-compose -> DigitalOcean SGP1 behind nginx.
 <!-- pulse:auto:end -->

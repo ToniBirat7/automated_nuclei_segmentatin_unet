@@ -1,4 +1,45 @@
 {
   "schemaVersion": 1,
-  "tasks": []
+  "tasks": [
+    {
+      "id": "m:production-deployment-on-digitalocean-sgp1",
+      "title": "Production deployment on DigitalOcean SGP1",
+      "status": "done",
+      "source": "machine",
+      "locked": false,
+      "createdAt": "2026-06-10T11:00:58.025225+00:00",
+      "updatedAt": "2026-06-10T11:01:10.260047+00:00",
+      "note": null
+    },
+    {
+      "id": "m:cpu-only-segmentation-backend",
+      "title": "CPU-only segmentation backend",
+      "status": "done",
+      "source": "machine",
+      "locked": false,
+      "createdAt": "2026-06-10T11:00:58.025266+00:00",
+      "updatedAt": "2026-06-10T11:01:10.260069+00:00",
+      "note": null
+    },
+    {
+      "id": "m:local-dev-docker-compose",
+      "title": "Local-dev docker-compose",
+      "status": "doing",
+      "source": "machine",
+      "locked": false,
+      "createdAt": "2026-06-10T11:00:58.025282+00:00",
+      "updatedAt": "2026-06-10T11:01:10.260078+00:00",
+      "note": null
+    },
+    {
+      "id": "m:expose-frontend-behind-system-nginx-localhost-30",
+      "title": "Expose frontend behind system nginx (localhost:3001)",
+      "status": "todo",
+      "source": "machine",
+      "locked": false,
+      "createdAt": "2026-06-10T11:00:58.025299+00:00",
+      "updatedAt": "2026-06-10T11:01:10.260086+00:00",
+      "note": null
+    }
+  ]
 }

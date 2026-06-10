@@ -1,2 +1,25 @@
 {"id": "commit:d07cc84b", "type": "commit", "at": "2026-05-31T04:46:40+00:00", "summary": "chore: local-dev docker-compose + untrack obsidian UI state"}
 {"id": "ci:default:d07cc84b:failure", "type": "ci", "at": "2026-06-10T09:16:55.064578+00:00", "summary": "CI failure on master"}
+{"id": "commit:aa5fbcaf", "type": "commit", "at": "2026-06-10T09:31:40+00:00", "summary": "chore(pulse): track .pulse/ project state"}
+{"id": "commit:12de9934", "type": "commit", "at": "2026-05-30T17:27:36+00:00", "summary": "fix: update domain birat.codes → biratcodes.dev throughout"}
+{"id": "commit:08002a9a", "type": "commit", "at": "2026-05-30T17:19:17+00:00", "summary": "fix: expose nuclei frontend on localhost:3001 for system nginx (no proxy_net)"}
+{"id": "commit:ece28d8a", "type": "commit", "at": "2026-05-30T13:00:08+00:00", "summary": "feat: production deployment — DigitalOcean SGP1 dual-project setup"}
+{"id": "commit:01dab1d7", "type": "commit", "at": "2026-05-30T12:19:16+00:00", "summary": "feat: production deployment config for DigitalOcean VM"}
+{"id": "commit:28d47414", "type": "commit", "at": "2026-05-30T10:26:10+00:00", "summary": "chore: replace sample images with user-specified dataset images"}
+{"id": "commit:60a8aa70", "type": "commit", "at": "2026-05-30T10:18:04+00:00", "summary": "fix: segmentation output, CPU-only backend, remove scipy/framer-motion"}
+{"id": "commit:dea90aba", "type": "commit", "at": "2026-05-30T09:46:44+00:00", "summary": "feat: production-ready Docker setup with ONNX model and sample images"}
+{"id": "commit:1822f5e1", "type": "commit", "at": "2026-05-30T09:22:33+00:00", "summary": "fix: correct CI badge URL to match repo name"}
+{"id": "commit:282fa131", "type": "commit", "at": "2026-05-30T09:02:58+00:00", "summary": "feat: portfolio improvements — README, tests, CI/CD, frontend polish"}
+{"id": "commit:b5188627", "type": "commit", "at": "2026-05-21T19:33:52+00:00", "summary": "docs: codebase"}
+{"id": "commit:bc4bb954", "type": "commit", "at": "2026-05-21T19:32:48+00:00", "summary": "chore: consolidate docs, papers, notebooks and test assets"}
+{"id": "commit:bcc70112", "type": "commit", "at": "2026-05-21T19:30:37+00:00", "summary": "chore: reorganize repo structure and modernize Python env management"}
+{"id": "commit:1ce01904", "type": "commit", "at": "2026-05-21T19:21:01+00:00", "summary": "feat: add LLM wiki, reusable agents, FastAPI backend, and Next.js frontend"}
+{"id": "commit:bbef9c81", "type": "commit", "at": "2026-05-21T18:41:58+00:00", "summary": "docs: deployment"}
+{"id": "commit:9e1bdc61", "type": "commit", "at": "2025-02-20T16:50:18+00:00", "summary": "Assignment Completed"}
+{"id": "commit:0ac8fc0b", "type": "commit", "at": "2025-02-20T16:49:21+00:00", "summary": "Assignment Completed"}
+{"id": "commit:06ce3d11", "type": "commit", "at": "2025-02-20T16:46:57+00:00", "summary": "Assignment Completed"}
+{"id": "commit:a8e51042", "type": "commit", "at": "2025-02-20T16:38:11+00:00", "summary": "Third Sem AI Assessment Completed All Presentation Added"}
+{"id": "commit:75058bcd", "type": "commit", "at": "2025-02-19T21:57:30+00:00", "summary": "Third Sem AI Assessment Completed All"}
+{"id": "commit:691ded0b", "type": "commit", "at": "2025-02-19T21:56:17+00:00", "summary": "Third Sem AI Assessment Completed All"}
+{"id": "commit:424ed241", "type": "commit", "at": "2025-02-19T17:34:20+00:00", "summary": "Third Sem AI Assessment Completed All"}
+{"id": "milestone:m:live-nuclei-segmentation-demo-on-digitalocean:done", "type": "milestone", "at": "2026-06-10T11:00:58.026148+00:00", "summary": "Milestone: Live nuclei-segmentation demo on DigitalOcean"}
