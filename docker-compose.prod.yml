@@ -1,4 +1,6 @@
-# Production compose — frontend exposed on localhost:3001 for system nginx
+# Production compose — frontend exposed on localhost:3001 (default) for the
+# fronting reverse proxy. Override the host port via NUCLEI_HOST_PORT in a
+# local .env if 3001 is already taken on the deploy host.
 # Usage on VM: docker compose -f docker-compose.prod.yml up -d
 # Build:       docker compose -f docker-compose.prod.yml build --pull
 
@@ -24,7 +26,7 @@ services:
   frontend:
     build: ./frontend
     ports:
-      - "127.0.0.1:3001:3000"
+      - "127.0.0.1:${NUCLEI_HOST_PORT:-3001}:3000"
     environment:
       - BACKEND_URL=http://backend:8000
     mem_limit: 256m
